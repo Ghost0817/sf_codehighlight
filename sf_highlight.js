@@ -1,5 +1,5 @@
 (function() {
-	
+
 	var getFromBetween = {
 		results:[],
 		string:"",
@@ -40,76 +40,76 @@
 			return this.results;
 		}
 	};
-	
+
 	function spacePad(num, places) {
 	  var zero = places - num.toString().length + 1;
 	  return Array(+(zero > 0 && zero)).join(" ") + num;
 	}
-	
+
 	if (typeof self === 'undefined' || !self.document) {
-		
+
 		console.log('ajillax bolomjgui bn!!!');
 		return;
 	}
-	
+
 	var codeType = document.getElementById("codeType");
 	var textArea = document.getElementById("RawCodeInput");
 	var coderesult = document.getElementById("code-result");
-	
+
 	var lines = textArea.value.split("\n"); // arrayOfLines is array where every element is string of one line
-	
+
 	var codehighlight = document.createElement('div');
 	codehighlight.className = 'literal-block notranslate';
-	
+
 	var codehighlighttype = document.createElement('div');
 	//codehighlighttype.className = 'highlight-bash';
 	codehighlighttype.className = 'highlight-php';
 	//codehighlighttype.className = 'highlight-twig';
-	
+
 	codehighlight.appendChild(codehighlighttype);
-	
+
 	var highlighttable = document.createElement('table');
 	highlighttable.className = 'highlighttable';
 	codehighlighttype.appendChild(highlighttable);
-	
+
 	var tbody = document.createElement('tbody');
 	highlighttable.appendChild(tbody);
-	
+
 	var tr = document.createElement('tr');
 	tbody.appendChild(tr);
-	
+
 	var td = document.createElement('td');
 	td.className = 'linenos';
 	tr.appendChild(td);
-	
+
 	var linenodiv = document.createElement('div');
 	linenodiv.className = 'linenodiv';
 	td.appendChild(linenodiv);
-	
+
 	var pre = document.createElement('pre');
 	linenodiv.appendChild(pre);
-	
+
 	for(var i = 0;i < lines.length;i++){
-		
+
 		pre.innerHTML += spacePad(i+1, lines.length.toString().length)+'\n'; // " 5";
 	}
-	
+
 	td = document.createElement('td');
 	td.className = 'code';
 	tr.appendChild(td);
-	
+
 	var highlight = document.createElement('div');
 	highlight.className = 'highlight';
 	td.appendChild(highlight);
-	
+
 	pre = document.createElement('pre');
 	highlight.appendChild(pre);
-	
-	
+
+
 
 	for(var i = 0;i < lines.length;i++){
 		//code here using lines[i] which will give you each line
-		
+
 		if(codeType.value == 'bush'){
 			if(lines[i].startsWith('#'))
 			{
@@ -118,22 +118,22 @@
 				span.innerHTML = lines[i]+'\n';
 				pre.appendChild(span);
 			}
-			
+
 			if(lines[i].startsWith('$ '))
 			{
 				pre.innerHTML += lines[i].replace('$ ','<span class="nv" style="-webkit-user-select: none;">$ </span>')+'\n';
 			}
-			
+
 			if(!lines[i].startsWith('$ ') && !lines[i].startsWith('#'))
 			{
 				var obj = getFromBetween.get(lines[i],'"','"');
 				var str = lines[i];
-				
+
 				for(j in obj){
 					var regex = new RegExp('"'+ obj[j].replace('(','\\(').replace(')','\\)')+'"', "g");
 					str = str.replace(regex, '<span class="s2">"' + obj[j] + '"</span>');
 				}
-				
+
 				pre.innerHTML += str.replace('\\>','<span class="se" style="-webkit-user-select: none;">\\></span>')+'\n';
 			}
 		}
@@ -145,7 +145,7 @@
 				span.innerHTML = lines[i].replace('<','&lt;').replace('>','&gt;')+'\n';
 				pre.appendChild(span);
 			}
-			
+
 			if(lines[i].trim().startsWith('<?') && lines[i].endsWith('?>'))
 			{
 				var span = document.createElement('span');
@@ -153,18 +153,18 @@
 				span.innerHTML = lines[i].replace('<','&lt;').replace('>','&gt;')+'\n';
 				pre.appendChild(span);
 			}
-			
+
 			if( !(lines[i].trim().startsWith('<?') && lines[i].endsWith('?>')) && !(lines[i].trim().startsWith('<!--') && lines[i].endsWith('-->')) )
 			{
 				var obj = getFromBetween.get(lines[i],'"','"');
 				var str = lines[i].replace(/</g,'&lt;').replace(/>/g,'&gt;');
-				
+
 				for(j in obj){
 					regex = new RegExp('"'+ obj[j].replace('(','\\(').replace(')','\\)')+'"', "g");
-					
+
 					str = str.replace(regex, '<span class="s">"' + obj[j] + '"</span>');
 				}
-					
+
 				var res = str.match(/\&lt;\s*\w* /g);
 				if(res != null){
 					str = str.replace(res[0],'<span class="nt">'+ res[0] +'</span>' );
@@ -174,7 +174,7 @@
 					console.log(res[0]);
 					str = str.replace(res[0],'<span class="nt">'+ res[0] +'</span>' );
 				}
-			
+
 				pre.innerHTML += str +'\n';
 			}
 		}
@@ -186,16 +186,23 @@
 				span.innerHTML = lines[i]+'\n';
 				pre.appendChild(span);
 			}
-			if(lines[i].startsWith('[') && lines[i].endsWith(']'))
+			else if(lines[i].startsWith('[') && lines[i].endsWith(']'))
 			{
 				var span = document.createElement('span');
 				span.className = 'k';
 				span.innerHTML = lines[i]+'\n';
 				pre.appendChild(span);
 			}
-		}
-		if(codeType.value == 'yml'){
-			
+			else
+			{
+				var res = lines[i].match(/[^ ]*/);
+				var rightTxt = lines[i].substring( lines[i].lastIndexOf(" = ") + 3, lines[i].length);
+				pre.innerHTML += lines[i]
+				.replace(res[0], '<span class="na">'+ res[0] +'</span>')
+				.replace(rightTxt, '<span class="s">'+ rightTxt +'</span>')
+				.replace(" = ", ' <span class="o">=</span> ')
+				+'\n';
+			}
 		}
 		if(codeType.value == 'php'){
 			if(lines[i].startsWith('//'))
@@ -206,9 +213,31 @@
 				pre.appendChild(span);
 			}
 		}
+		if(codeType.value == 'twig'){
+			if(lines[i].trim().startsWith('{#') && lines[i].endsWith('#}'))
+			{
+				var span = document.createElement('span');
+				span.className = 'c';
+				span.innerHTML = lines[i]+'\n';
+				pre.appendChild(span);
+			} else if(lines[i] == ''){
+				var span = document.createElement('span');
+				span.className = 'x';
+				span.innerHTML = lines[i]+'\n';
+				pre.appendChild(span);
+			} else {
+				var span = document.createElement('span');
+				span.className = 'x';
+				span.innerHTML = lines[i].replace(/</g,'&lt;').replace(/>/g,'&gt;')+'\n';
+				pre.appendChild(span);
+			}
+		}
+		if(codeType.value == 'yml'){
+
+		}
 	}
-	
-	
+
+
 	coderesult.appendChild(codehighlight);
-	
+
 }());
