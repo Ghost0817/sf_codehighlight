@@ -1,0 +1,252 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="highlight.css">
+
+<style>
+*{
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+textarea
+{
+  border:1px solid #999999;
+  width:100%;
+  margin:5px 0;
+  padding:3px;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+</style>
+<head>
+
+<body>
+
+<!-- Bush complete -->
+<!-- Xml complete -->
+<!-- ini complete -->
+<!-- Bush complete -->
+
+<select id="codeType" name="codeType">
+	<option value="bush">Bush</option>
+	<option value="php">Php</option>
+	<option value="xml">Xml</option>
+	<option value="yml">Yml</option>
+	<option value="twig ">Twig </option>
+	<option value="ini" selected>Configuration</option>
+</select>
+
+<textarea id="RawCodeInput" rows="12">
+[mysqld]
+# Version 5.5.3 introduced "utf8mb4", which is recommended
+collation-server     = utf8mb4_general_ci # Replaces utf8_general_ci
+character-set-server = utf8mb4            # Replaces utf8</textarea>
+
+<div id="code-result"></div>
+
+
+<!--<div class="literal-block notranslate"><div class="highlight-bash"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># Linux and macOS systems</span>
+<span class="nv" style="-webkit-user-select: none;">$ </span>sudo mkdir -p /usr/local/bin
+<span class="nv" style="-webkit-user-select: none;">$ </span>sudo curl -LsS https://symfony.com/installer -o /usr/local/bin/symfony
+<span class="nv" style="-webkit-user-select: none;">$ </span>sudo chmod a+x /usr/local/bin/symfony
+
+<span class="c"># Windows systems</span>
+c:<span class="se">\&gt;</span> php -r <span class="s2">"readfile('https://symfony.com/installer');"</span> &gt; symfony
+</pre></div>
+</td></tr></tbody></table></div></div>-->
+
+
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20</pre></div></td><td class="code"><div class="highlight"><pre><span class="c1">// src/AppBundle/Controller/LuckyController.php</span>
+<span class="k">namespace</span> <span class="nx">AppBundle\Controller</span><span class="p">;</span>
+
+<span class="k">use</span> <span class="nx">Sensio\Bundle\FrameworkExtraBundle\Configuration\Route</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\HttpFoundation\Response</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">LuckyController</span>
+<span class="p">{</span>
+    <span class="sd">/**</span>
+<span class="sd">     * @Route("/lucky/number")</span>
+<span class="sd">     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">numberAction</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$number</span> <span class="o">=</span> <span class="nb">mt_rand</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">);</span>
+
+        <span class="k">return</span> <span class="k">new</span> <span class="nx">Response</span><span class="p">(</span>
+            <span class="s1">'&lt;html&gt;&lt;body&gt;Lucky number: '</span><span class="o">.</span><span class="nv">$number</span><span class="o">.</span><span class="s1">'&lt;/body&gt;&lt;/html&gt;'</span>
+        <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></tbody></table></div></div>
+
+
+
+
+
+<div class="literal-block notranslate"><div class="highlight-twig"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">{# app/Resources/views/lucky/number.html.twig #}</span><span class="x"></span>
+
+<span class="x">&lt;h1&gt;Your lucky number is </span><span class="cp">{{</span> <span class="nv">number</span> <span class="cp">}}</span><span class="x">&lt;/h1&gt;</span>
+</pre></div>
+</td></tr></tbody></table></div></div>
+
+
+
+<div class="literal-block notranslate"><div class="highlight-yaml" style="display: block;"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4
+5
+6
+7
+8</pre></div></td><td class="code"><div class="highlight"><pre><span class="c1"># app/config/routing.yml</span>
+<span class="l-Scalar-Plain">blog_list</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">path</span><span class="p-Indicator">:</span>      <span class="l-Scalar-Plain">/blog</span>
+    <span class="l-Scalar-Plain">defaults</span><span class="p-Indicator">:</span>  <span class="p-Indicator">{</span> <span class="nv">_controller</span><span class="p-Indicator">:</span> <span class="nv">AppBundle</span><span class="p-Indicator">:</span><span class="nv">Blog</span><span class="p-Indicator">:</span><span class="nv">list</span> <span class="p-Indicator">}</span>
+
+<span class="l-Scalar-Plain">blog_show</span><span class="p-Indicator">:</span>
+    <span class="l-Scalar-Plain">path</span><span class="p-Indicator">:</span>      <span class="l-Scalar-Plain">/blog/{slug}</span>
+    <span class="l-Scalar-Plain">defaults</span><span class="p-Indicator">:</span>  <span class="p-Indicator">{</span> <span class="nv">_controller</span><span class="p-Indicator">:</span> <span class="nv">AppBundle</span><span class="p-Indicator">:</span><span class="nv">Blog</span><span class="p-Indicator">:</span><span class="nv">show</span> <span class="p-Indicator">}</span>
+</pre></div>
+</td></tr></tbody></table></div></div>
+
+
+
+
+<div class="literal-block notranslate"><div class="highlight-xml" style="display: block;"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">&lt;!-- app/config/routing.xml --&gt;</span>
+<span class="cp">&lt;?xml version="1.0" encoding="UTF-8" ?&gt;</span>
+<span class="nt">&lt;routes</span> <span class="na">xmlns=</span><span class="s">"http://symfony.com/schema/routing"</span>
+    <span class="na">xmlns:xsi=</span><span class="s">"http://www.w3.org/2001/XMLSchema-instance"</span>
+    <span class="na">xsi:schemaLocation=</span><span class="s">"http://symfony.com/schema/routing</span>
+<span class="s">        http://symfony.com/schema/routing/routing-1.0.xsd"</span><span class="nt">&gt;</span>
+
+    <span class="nt">&lt;route</span> <span class="na">id=</span><span class="s">"blog_list"</span> <span class="na">path=</span><span class="s">"/blog"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;default</span> <span class="na">key=</span><span class="s">"_controller"</span><span class="nt">&gt;</span>AppBundle:Blog:list<span class="nt">&lt;/default&gt;</span>
+    <span class="nt">&lt;/route&gt;</span>
+
+    <span class="nt">&lt;route</span> <span class="na">id=</span><span class="s">"blog_show"</span> <span class="na">path=</span><span class="s">"/blog/{slug}"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;default</span> <span class="na">key=</span><span class="s">"_controller"</span><span class="nt">&gt;</span>AppBundle:Blog:show<span class="nt">&lt;/default&gt;</span>
+    <span class="nt">&lt;/route&gt;</span>
+<span class="nt">&lt;/routes&gt;</span>
+</pre></div>
+</td></tr></tbody></table></div></div>
+
+
+
+
+<div class="literal-block notranslate"><div class="highlight-php" style="display: block;"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span class="c1">// app/config/routing.php</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\Routing\RouteCollection</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Symfony\Component\Routing\Route</span><span class="p">;</span>
+
+<span class="nv">$collection</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RouteCollection</span><span class="p">();</span>
+<span class="nv">$collection</span><span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">'blog_list'</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Route</span><span class="p">(</span><span class="s1">'/blog'</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">'_controller'</span> <span class="o">=&gt;</span> <span class="s1">'AppBundle:Blog:list'</span><span class="p">,</span>
+<span class="p">)));</span>
+<span class="nv">$collection</span><span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="s1">'blog_show'</span><span class="p">,</span> <span class="k">new</span> <span class="nx">Route</span><span class="p">(</span><span class="s1">'/blog/{slug}'</span><span class="p">,</span> <span class="k">array</span><span class="p">(</span>
+    <span class="s1">'_controller'</span> <span class="o">=&gt;</span> <span class="s1">'AppBundle:Blog:show'</span><span class="p">,</span>
+<span class="p">)));</span>
+
+<span class="k">return</span> <span class="nv">$collection</span><span class="p">;</span>
+</pre></div>
+</td></tr></tbody></table></div></div>
+
+
+
+<div class="literal-block notranslate"><div class="highlight-html+jinja"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">{# app/Resources/views/Emails/registration.html.twig #}</span>
+<span class="nt">&lt;h3&gt;</span>You did it! You registered!<span class="nt">&lt;/h3&gt;</span>
+
+Hi <span class="cp">{{</span> <span class="nv">name</span> <span class="cp">}}</span>! You're successfully registered.
+
+<span class="c">{# example, assuming you have a route named "login" #}</span>
+To login, go to: <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">"</span><span class="cp">{{</span> <span class="nv">url</span><span class="o">(</span><span class="s1">'login'</span><span class="o">)</span> <span class="cp">}}</span><span class="s">"</span><span class="nt">&gt;</span>...<span class="nt">&lt;/a&gt;</span>.
+
+Thanks!
+
+<span class="c">{# Makes an absolute URL to the /images/logo.png file #}</span>
+<span class="nt">&lt;img</span> <span class="na">src=</span><span class="s">"</span><span class="cp">{{</span> <span class="nv">absolute_url</span><span class="o">(</span><span class="nv">asset</span><span class="o">(</span><span class="s1">'images/logo.png'</span><span class="o">))</span> <span class="cp">}}</span><span class="s">"</span><span class="nt">&gt;</span>
+</pre></div>
+</td></tr></tbody></table></div></div>
+
+
+
+
+
+
+<div class="literal-block notranslate"><div class="highlight-ini"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">[mysqld]</span>
+<span class="c1"># Version 5.5.3 introduced "utf8mb4", which is recommended</span>
+<span class="na">collation-server</span>     <span class="o">=</span> <span class="s">utf8mb4_general_ci # Replaces utf8_general_ci</span>
+<span class="na">character-set-server</span> <span class="o">=</span> <span class="s">utf8mb4            # Replaces utf8</span>
+</pre></div>
+</td></tr></tbody></table></div></div>
+
+
+<script src="sf_highlight.js"></script>
+</body>
+</html>
