@@ -30,63 +30,64 @@ textarea
 
 <select id="codeType" name="codeType">
 	<option value="bush">Bush</option>
-	<option value="php">Php</option>
+	<option value="php" selected>Php</option>
 	<option value="xml">Xml</option>
 	<option value="yml">Yml</option>
-	<option value="twig" selected>Twig</option>
+	<option value="twig">Twig</option>
 	<option value="ini">Configuration</option>
 </select>
 
 <textarea id="RawCodeInput" rows="12">
-{# app/Resources/views/lucky/number.html.twig #}
-
-<h1>Your lucky number is {{ number }}</h1></textarea>
+<?php
+	$key_number = ""; //Golomt bank will provide you this code 
+	$trans_number = "123456";
+	$trans_amount = "0.01"; 
+	$lang_ind = "0"; 
+	$cusmtoer_id = "cust25485";
+	$subID = 1;
+?>
+<form action="https://m.egolomt.mn/billing/cardinfo.aspx" method="post" >
+	<input type="hidden" name="key_number" value="<?php echo $key_number ?>" /> 
+	<input type="hidden" name="trans_number" value="<?php echo $trans_number ?>" />
+	Amount:<?php echo $trans_amount ?><br>
+	<input type="hidden" name="trans_amount" value="<?php echo $trans_amount ?> "/> 
+	<input type="hidden" name="lang_ind" value="0">
+	<input type="hidden" name="customer_id" value="<?php echo $customer_id ?>" /> 
+	<input type="hidden" name="subID" value="<?php echo $subID ?>" />
+	<input type="submit" alt="Golomtbank" value="Submit" title="Golomtbank" />
+</form></textarea>
 
 <div id="code-result"></div>
 
 
-<!--<div class="literal-block notranslate"><div class="highlight-bash"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4
-5
-6
-7</pre></div></td><td class="code"><div class="highlight"><pre><span class="c"># Linux and macOS systems</span>
-<span class="nv" style="-webkit-user-select: none;">$ </span>sudo mkdir -p /usr/local/bin
-<span class="nv" style="-webkit-user-select: none;">$ </span>sudo curl -LsS https://symfony.com/installer -o /usr/local/bin/symfony
-<span class="nv" style="-webkit-user-select: none;">$ </span>sudo chmod a+x /usr/local/bin/symfony
 
-<span class="c"># Windows systems</span>
-c:<span class="se">\&gt;</span> php -r <span class="s2">"readfile('https://symfony.com/installer');"</span> &gt; symfony
-</pre></div>
-</td></tr></tbody></table></div></div>-->
-
-
-
-
-<!--<div class="literal-block notranslate"><div class="highlight-ini"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3
-4</pre></div></td><td class="code"><div class="highlight"><pre><span class="k">[mysqld]</span>
-<span class="c1"># Version 5.5.3 introduced "utf8mb4", which is recommended</span>
-<span class="na">collation-server</span>     <span class="o">=</span> <span class="s">utf8mb4_general_ci # Replaces utf8_general_ci</span>
-<span class="na">character-set-server</span> <span class="o">=</span> <span class="s">utf8mb4            # Replaces utf8</span>
-</pre></div>
-</td></tr></tbody></table></div></div>
--->
-
-
-
-
-<!---->
-<div class="literal-block notranslate"><div class="highlight-twig"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre>1
-2
-3</pre></div></td><td class="code"><div class="highlight"><pre><span class="c">{# app/Resources/views/lucky/number.html.twig #}</span><span class="x"></span>
-
-<span class="x">&lt;h1&gt;Your lucky number is </span><span class="cp">{{</span> <span class="nv">number</span> <span class="cp">}}</span><span class="x">&lt;/h1&gt;</span>
-</pre></div>
-</td></tr></tbody></table></div></div>
-
+<table border="1" class="docutils">
+<colgroup>
+<col width="67%">
+<col width="17%">
+<col width="17%">
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Filename</th>
+<th class="head">Format</th>
+<th class="head">Engine</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><code class="notranslate">blog/index.html.twig</code></td>
+<td>HTML</td>
+<td>Twig</td>
+</tr>
+<tr class="row-odd"><td><code class="notranslate">blog/index.html.php</code></td>
+<td>HTML</td>
+<td>PHP</td>
+</tr>
+<tr class="row-even"><td><code class="notranslate">blog/index.css.twig</code></td>
+<td>CSS</td>
+<td>Twig</td>
+</tr>
+</tbody>
+</table>
 
 
 
