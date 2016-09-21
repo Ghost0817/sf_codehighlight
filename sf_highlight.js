@@ -1,4 +1,6 @@
 (function() {
+	
+	var phpcodestr = [ 'foreach', 'echo', 'endforeach', 'as' ]
 
 	var getFromBetween = {
 		results:[],
@@ -44,6 +46,17 @@
 	function spacePad(num, places) {
 	  var zero = places - num.toString().length + 1;
 	  return Array(+(zero > 0 && zero)).join(" ") + num;
+	}
+	
+	function Phpcode( code ) {
+		code = code.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+		
+		for(k in phpcodestr) {
+			regex = new RegExp( ' '+ phpcodestr[k]+' ', "g");
+			code = code.replace(regex, ' <span class="k">'+ phpcodestr[k] +'</span> ');
+		}
+		
+		return code;
 	}
 
 	if (typeof self === 'undefined' || !self.document) {
@@ -171,7 +184,6 @@
 				}
 				res = str.match(/\&lt;\/\s*\w*\&gt;/g);
 				if(res != null){
-					console.log(res[0]);
 					str = str.replace(res[0],'<span class="nt">'+ res[0] +'</span>' );
 				}
 
@@ -205,30 +217,116 @@
 			}
 		}
 		if(codeType.value == 'php'){
-			if(lines[i].startsWith('//'))
+			var str = lines[i].replace(/</g,'&lt;').replace(/>/g,'&gt;');
+			if(str.startsWith('//'))
 			{
 				var span = document.createElement('span');
 				span.className = 'c1';
-				span.innerHTML = lines[i]+'\n';
+				span.innerHTML = str+'\n';
 				pre.appendChild(span);
+			} else {
+				var res = str.match(/\&lt;\s*\w* /g);
+				for(j in res){
+					if(res[j] != null){
+						str = str.replace(res[j],'<span class="nt">'+ res[j].trim() +'</span> ' );
+					}
+				}
+				
+				res = str.match(/\&lt;\s*\w*\&gt;/g);
+				for(j in res){
+					if(res[j] != null){
+						str = str.replace(res[j],'<span class="nt">'+ res[j] +'</span>' );
+					}
+				}
+				
+				res = str.match(/\&lt;\/\s*\w*\&gt;/g);
+				for(j in res){
+					if(res[j] != null){
+						str = str.replace(res[j],'<span class="nt">'+ res[j] +'</span>' );
+					}
+				}
+				
+				var obj = getFromBetween.get(lines[i],'"','"');
+				
+				for(j in obj) {
+					regex = new RegExp('"'+ obj[j].replace(/</g,'\\&lt;').replace(/>/g,'\\&gt;').replace(/\?/g,'\\?').replace(/\$/g,'\\$').replace('(','\\(').replace(')','\\)')+'"', "g");
+					if(obj[j].startsWith("<?php") && obj[j].endsWith("?>")){
+						str = str.replace(regex, '<span class="s">"</span>' + Phpcode( obj[j] ) + '<span class="s">"</span>');
+					} else {
+						str = str.replace(regex, '<span class="s">"' + obj[j] + '"</span>');
+					}
+				}
+				
+				if(str.trim().startsWith("&lt;?php") && str.endsWith("?&gt;")) {
+					console.log(str);
+					str = Phpcode(str);
+				}
+				
+				pre.innerHTML += str
+				.replace(/&lt;!DOCTYPE html&gt;/, '<span class="cp">&lt;!DOCTYPE html&gt;</span>')
+				.replace(/\&lt;\?php/g, '<span class="cp">&lt;?php</span>')
+				.replace(/\?\&gt;/g, '<span class="cp">?&gt;</span>')
+				+'\n';
 			}
 		}
 		if(codeType.value == 'twig'){
-			if(lines[i].trim().startsWith('{#') && lines[i].endsWith('#}'))
+			var str = lines[i].replace(/</g,'&lt;').replace(/>/g,'&gt;');
+			
+			if(str.trim().startsWith('{#') && str.endsWith('#}'))
 			{
 				var span = document.createElement('span');
 				span.className = 'c';
-				span.innerHTML = lines[i]+'\n';
+				span.innerHTML = str+'\n';
 				pre.appendChild(span);
-			} else if(lines[i] == ''){
+			} else if(str == ''){
 				var span = document.createElement('span');
 				span.className = 'x';
-				span.innerHTML = lines[i]+'\n';
+				span.innerHTML = str+'\n';
 				pre.appendChild(span);
 			} else {
+				
+				var res = str.match(/\&lt;\s*\w* /g);
+				for(j in res){
+					if(res[j] != null){
+						str = str.replace(res[j],'<span class="nt">'+ res[j] +'</span>' );
+					}
+				}
+				
+				res = str.match(/\&lt;\s*\w*\&gt;/g);
+				for(j in res){
+					if(res[j] != null){
+						console.log(res[j]);
+						str = str.replace(res[j],'<span class="nt">'+ res[j] +'</span>' );
+					}
+				}
+				
+				res = str.match(/\&lt;\/\s*\w*\&gt;/g);
+				for(j in res){
+					if(res[j] != null){
+						str = str.replace(res[j],'<span class="nt">'+ res[j] +'</span>' );
+					}
+				}
+				
+				var obj = getFromBetween.get(lines[i],'"','"');
+				
+				for(j in obj){
+					regex = new RegExp('"'+ obj[j].replace('(','\\(').replace(')','\\)')+'"', "g");
+					if(obj[j].includes("{{") || obj[j].includes("}}")){
+						str = str.replace(regex, '<span class="s">"</span>' + obj[j] + '<span class="s">"</span>');
+					} else {
+						str = str.replace(regex, '<span class="s">"' + obj[j] + '"</span>');
+					}
+				}
+				
 				var span = document.createElement('span');
 				span.className = 'x';
-				span.innerHTML = lines[i].replace(/</g,'&lt;').replace(/>/g,'&gt;')+'\n';
+				span.innerHTML = str
+				.replace(/&lt;!DOCTYPE html&gt;/, '<span class="cp">&lt;!DOCTYPE html&gt;</span>')
+				.replace(/{{/g, '<span class="cp">{{</span>')
+				.replace(/}}/g, '<span class="cp">}}</span>')
+				.replace(/{%/g, '<span class="cp">{%</span>')
+				.replace(/%}/g, '<span class="cp">%}</span>')
+				+'\n';
 				pre.appendChild(span);
 			}
 		}
