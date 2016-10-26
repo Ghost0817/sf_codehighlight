@@ -1,6 +1,7 @@
 (function() {
 	
-	var phpcodestr = [ 'foreach', 'echo', 'endforeach', 'as' ]
+	var phpcodestr = [ 'namespace','use','public','class','function','foreach', 'echo', 'endforeach', 'as', 'array', '=\&gt;', 'new', 'if', 'else', 'print_r','return' ]
+	var is_tag_open = false;
 
 	var getFromBetween = {
 		results:[],
@@ -56,6 +57,59 @@
 			code = code.replace(regex, ' <span class="k">'+ phpcodestr[k] +'</span> ');
 		}
 		
+		for(k in phpcodestr) {
+			regex = new RegExp( phpcodestr[k]+' ', "g");
+			code = code.replace(regex, '<span class="k">'+ phpcodestr[k] +'</span> ');
+		}
+		for(k in phpcodestr) {
+			if(phpcodestr[k] == code) {
+				code = code.replace(code, '<span class="k">'+ code +'</span> ');
+			}
+		}
+		
+		var res = code.match(/\(/g);
+		if(res != null && res.length > 0 && !code.trim().endsWith('();'))
+		{
+			code = code.replace(/\(/g, '<span class="p">(</span>');
+		}
+		res = code.match(/\)/g);
+		if(res != null && res.length > 0)
+		{
+			if(code.trim().endsWith('();')) {
+				code = code.replace('();','').replace(/\)/g, '<span class="p">)</span>')+'();';
+			} else if(code.trim().endsWith(');'))
+			{
+				code = code.replace(');','').replace(/\)/g, '<span class="p">)</span>')+');';
+			} else {
+				code = code.replace(/\)/g, '<span class="p">)</span>');
+			}
+		}
+		res = code.match(/,/g);
+		if(res != null && res.length > 0 && !code.trim().endsWith('();'))
+		{
+			code = code.replace(/,/g, '<span class="p">,</span>');
+		}
+		res = code.match(/\{/g);
+		if(res != null && res.length > 0 && !code.trim().endsWith('();'))
+		{
+			code = code.replace(/\{/g, '<span class="p">{</span>');
+		}
+		res = code.match(/\}/g);
+		if(res != null && res.length > 0 && !code.trim().endsWith('();'))
+		{
+			code = code.replace(/\}/g, '<span class="p">}</span>');
+		}
+		// endings
+		if(code.trim().endsWith('();')){
+			code = code.replace('();', '<span class="p">();</span> ');
+		}
+		else if(code.trim().endsWith(');')){
+			code = code.replace(');', '<span class="p">);</span> ');
+		}
+		else if(code.trim().endsWith(';')){
+			//code = code.replace(';', '<span class="p">;</span> ');
+		}
+		//code = code.replace('[^);]', '<span class="k">);</span> ');
 		return code;
 	}
 
@@ -70,6 +124,8 @@
 	var coderesult = document.getElementById("code-result");
 
 	var lines = textArea.value.split("\n"); // arrayOfLines is array where every element is string of one line
+	
+	
 
 	var codehighlight = document.createElement('div');
 	codehighlight.className = 'literal-block notranslate';
@@ -216,7 +272,8 @@
 				+'\n';
 			}
 		}
-		if(codeType.value == 'php'){
+		if(codeType.value == 'html'){
+			
 			var str = lines[i].replace(/</g,'&lt;').replace(/>/g,'&gt;');
 			if(str.startsWith('//'))
 			{
@@ -246,6 +303,18 @@
 					}
 				}
 				
+				if(str.trim().startsWith("&lt;?php") && str.endsWith("?&gt;")) {
+					str = Phpcode(str);
+				} else if(str.trim().startsWith("&lt;?php")) {
+					is_tag_open = true;
+				} else if(str.endsWith("?&gt;")) {
+					is_tag_open = false;
+				}
+				
+				if (is_tag_open == true) {
+					str = Phpcode( str );
+				}
+				
 				var obj = getFromBetween.get(lines[i],'"','"');
 				
 				for(j in obj) {
@@ -257,9 +326,48 @@
 					}
 				}
 				
+				pre.innerHTML += str
+				.replace(/&lt;!DOCTYPE html&gt;/, '<span class="cp">&lt;!DOCTYPE html&gt;</span>')
+				.replace(/\&lt;\?php/g, '<span class="cp">&lt;?php</span>')
+				.replace(/\?\&gt;/g, '<span class="cp">?&gt;</span>')
+				+'\n';
+			}
+		}
+		if(codeType.value == 'php'){
+			
+			var str = lines[i].replace(/</g,'&lt;').replace(/>/g,'&gt;');
+			if(str.trim().startsWith('//'))
+			{
+				var span = document.createElement('span');
+				span.className = 'c1';
+				span.innerHTML = str+'\n';
+				pre.appendChild(span);
+			} else {
+				
 				if(str.trim().startsWith("&lt;?php") && str.endsWith("?&gt;")) {
-					console.log(str);
 					str = Phpcode(str);
+				} else if(str.trim().startsWith("&lt;?php")) {
+					is_tag_open = true;
+				} else if(str.endsWith("?&gt;")) {
+					is_tag_open = false;
+				}
+				
+				if (is_tag_open == true) {
+					str = Phpcode( str );
+				}
+				
+				var obj = getFromBetween.get(lines[i],'"','"');
+				
+				for(j in obj) {
+					regex = new RegExp('"'+ obj[j].replace(/</g,'\\&lt;').replace(/>/g,'\\&gt;').replace(/\?/g,'\\?').replace(/\$/g,'\\$').replace('(','\\(').replace(')','\\)')+'"', "g");
+					str = str.replace(regex, '<span class="s">"' + obj[j] + '"</span>');
+				}
+				
+				var obj = getFromBetween.get(lines[i], "'","'");
+				for(j in obj){
+					regex = new RegExp("'"+ obj[j].replace(/</g,'\\&lt;').replace(/>/g,'\\&gt;').replace(/\?/g,'\\?').replace(/\$/g,'\\$').replace('(','\\(').replace(')','\\)')+"'", "g");
+					
+					str = str.replace(regex, '<span class="s">\'' + obj[j].replace(/</g,'\&lt;').replace(/>/g,'\&gt;') + '\'</span>');
 				}
 				
 				pre.innerHTML += str
