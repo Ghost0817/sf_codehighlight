@@ -39,23 +39,26 @@ textarea
 
 <textarea id="RawCodeInput" rows="12">
 <?php
-	$key_number = ""; //Golomt bank will provide you this code 
-	$trans_number = "123456";
-	$trans_amount = "0.01"; 
-	$lang_ind = "0"; 
-	$cusmtoer_id = "cust25485";
-	$subID = 1;
-?>
-<form action="https://m.egolomt.mn/billing/cardinfo.aspx" method="post" >
-	<input type="hidden" name="key_number" value="<?php echo $key_number ?>" /> 
-	<input type="hidden" name="trans_number" value="<?php echo $trans_number ?>" />
-	Amount:<?php echo $trans_amount ?><br>
-	<input type="hidden" name="trans_amount" value="<?php echo $trans_amount ?> "/> 
-	<input type="hidden" name="lang_ind" value="0">
-	<input type="hidden" name="customer_id" value="<?php echo $customer_id ?>" /> 
-	<input type="hidden" name="subID" value="<?php echo $subID ?>" />
-	<input type="submit" alt="Golomtbank" value="Submit" title="Golomtbank" />
-</form></textarea>
+// src/AppBundle/Controller/LuckyController.php
+namespace AppBundle\Controller;
+
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Response;
+
+class LuckyController
+{
+    /**
+     * @Route("/lucky/number")
+     */
+    public function numberAction()
+    {
+        $number = mt_rand(0, 100);
+
+        return new Response(
+            '<html><body>Lucky number: '.$number.'</body></html>'
+        );
+    }
+}</textarea>
 
 <div id="code-result"></div>
 
