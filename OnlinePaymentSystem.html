@@ -1,0 +1,389 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="highlight.css">
+
+<style>
+*{
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+textarea
+{
+  border:1px solid #999999;
+  width:100%;
+  margin:5px 0;
+  padding:3px;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
+}
+</style>
+<head>
+
+<body>
+
+<h2>1. INFORMATION</h2>
+
+<p>This manual contain the operating principles, connection instruction and other information of Golomt Bank's e-commerce system.</p>
+
+<p><b>Online payment web</b> need to insert card information and e-code. This page send 
+transaction information to web service.</p>
+
+<p><b>Web service</b> check card information and e-code. If correct send transaction to Online
+payment system.</p>
+
+<p><b>Online payment system</b> check card and send transaction to VISA/MASTER/AMEX/CUP. </p>
+
+<p><b>Card System</b> It’ll be execute transaction.</p>
+
+<p><b>SOAP service</b> Confirmation service</p>
+
+<p><b>Card information screen.</b> If merchant send customer ID to us. We will save card information on our side. There are two tab. One is by new card. Another one is by old card. If user did transaction on our payment system with that merchant we save the card information. User just need to select card then that page fill in the card number, card holder name on card and expiry date fields. It is easy to use.</p>
+
+<div class="figure"><img alt="screen1.jpg" class="align-center" src="screen1.jpg" width="400"></div>
+
+<p><b>Confirmation page.</b> User need to insert e-code/e-token on following screen. If card is not onus card it will be direct to issuer bank's OTP page
+</p>
+
+<div class="figure"><img alt="screen2.jpg" class="align-center" src="screen2.jpg" width="280"></div>
+
+
+<h2>2. Connecting with the bank</h2>
+
+<p><b>First step:</b> You need to provide us the response URL and email address.</p>
+<p><b>Response URL:</b> We will send transaction response to this URL after transaction completed.</p>
+<p><b>Email:</b> We will send email about transaction that is success or not.</p>
+
+<p><b>Second step:</b></p>
+
+<p>You need to send below parameters to this link <a href="https://m.egolomt.mn/billingnew/cardinfo.aspx">https://m.egolomt.mn/billingnew/cardinfo.aspx</a> using html form's POST method.</p>
+
+<table border="1" class="docutils">
+	<colgroup>
+	<col width="17%">
+	<col width="60%">
+	</colgroup>
+	<thead valign="bottom">
+		<tr class="row-odd">
+			<th class="head">Required parameter</th>
+			<th class="head">Comment</th>
+		</tr>
+	</thead>
+	<tbody valign="top">
+		<tr class="row-even">
+			<td>1. key_number</td>
+			<td>Golomt bank will provide you this number. This number is your web site’s most important key number. Our system will recognize your web site using this code.</td>
+		</tr>
+		<tr class="row-odd">
+			<td>2. trans_number</td>
+			<td>Transaction number. This number must unique number for each single transactions.</td>
+		</tr>
+		<tr class="row-even">
+			<td>3. trans_amount</td>
+			<td>Transaction amount</td>
+		</tr>
+		<tr class="row-even">
+			<td>4. lang_ind </td>
+			<td>Language: 0 is Mongolia, 1 is English /Card information form language/</td>
+		</tr>
+		<tr class="row-even">
+			<td>5. customer_id</td>
+			<td>It’ll use for save card information</td>
+		</tr>
+		<tr class="row-even">
+			<td>6. subID</td>
+			<td>If  merchants want to use more than one response URL you need 
+			to provide each URL. /we can save 3 URLs/We'll save on our side. 
+			For example subID = 1 then response to 
+			<a href="https://www.merchant.com/resp1.aspx">https://www.merchant.com/resp1.aspx</a>. subID = 2 then
+			<a href="https://www.merchant.com/resp2.aspx">https://www.merchant.com/resp2.aspx</a>. subID =3 then
+			<a href="https://www.merchant.com/resp3.aspx">https://www.merchant.com/resp3.aspx</a>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>In this below information containing the example code for request to Golomt bank online system using PHP code.</p>
+
+
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+	$key_number = <span class="s">""</span>; //Golomt bank will provide you this code 
+	$trans_number = <span class="s">"123456"</span>;
+	$trans_amount = <span class="s">"0.01"</span>; 
+	$lang_ind = <span class="s">"0"</span>; 
+	$cusmtoer_id = <span class="s">"cust25485"</span>;
+	$subID = 1;
+<span class="cp">?&gt;</span>
+<span class="nt">&lt;form</span> action=<span class="s">"https://m.egolomt.mn/billing/cardinfo.aspx"</span> method=<span class="s">"post"</span> &gt;
+	<span class="nt">&lt;input</span> type=<span class="s">"hidden"</span> name=<span class="s">"key_number"</span> value=<span class="s">"</span><span class="cp">&lt;?php</span> <span class="k">echo</span> $key_number <span class="cp">?&gt;</span><span class="s">"</span> /&gt; 
+	<span class="nt">&lt;input</span> type=<span class="s">"hidden"</span> name=<span class="s">"trans_number"</span> value=<span class="s">"</span><span class="cp">&lt;?php</span> <span class="k">echo</span> $trans_number <span class="cp">?&gt;</span><span class="s">"</span> /&gt;
+	Amount:<span class="cp">&lt;?php</span> echo $trans_amount <span class="cp">?&gt;</span><span class="nt">&lt;br&gt;</span>
+	<span class="nt">&lt;input</span> type=<span class="s">"hidden"</span> name=<span class="s">"trans_amount"</span> value=<span class="s">"<!--?php echo $trans_amount ?--> "</span>/&gt; 
+	<span class="nt">&lt;input</span> type=<span class="s">"hidden"</span> name=<span class="s">"lang_ind"</span> value=<span class="s">"0"</span>&gt;
+	<span class="nt">&lt;input</span> type=<span class="s">"hidden"</span> name=<span class="s">"customer_id"</span> value=<span class="s">"</span><span class="cp">&lt;?php</span> <span class="k">echo</span> $customer_id <span class="cp">?&gt;</span><span class="s">"</span> /&gt; 
+	<span class="nt">&lt;input</span> type=<span class="s">"hidden"</span> name=<span class="s">"subID"</span> value=<span class="s">"</span><span class="cp">&lt;?php</span> <span class="k">echo</span> $subID <span class="cp">?&gt;</span><span class="s">"</span> /&gt;
+	<span class="nt">&lt;input</span> type=<span class="s">"submit"</span> alt=<span class="s"><span class="s">"Golomtbank"</span></span> value=<span class="s">"Submit"</span> title=<span class="s"><span class="s">"Golomtbank"</span></span> /&gt;
+<span class="nt">&lt;/form&gt;</span>
+</pre></div></td></tr></tbody></table></div></div>
+
+
+
+<p>After you entered your card information. Your request will send to our Online payment system. A few second later you will receive the payment result on your web site URL /You need to provide me this URL before test transaction/ from our payment system. You need to use HTML's GET method to receive the result of online transaction.</p>
+
+<p>Bank system will provide you the following 4 parameters on you URL that is you provided us.</p>
+
+
+<p>For example:<p>
+
+
+<p>https://www.merchantsite.com/response.php?success=...&trans_number=...&error_code&error_desc</p>
+
+
+<h2>3.  Using SOAP service</h2>
+
+
+<p>Using a SOAP service is extra service for merchants. It means double check the successful transaction.</p>
+
+
+<p>SOAP service is locating on  https://m.egolomt.mn:7073/persistence.asmx  URL. So you need to send five parameters to this URL.</p>
+<p>The following parameters must be send to our SOAP service.</p>
+
+<table border="1" class="docutils">
+	<colgroup>
+	<col width="17%">
+	<col width="60%">
+	</colgroup>
+	<thead valign="bottom">
+		<tr class="row-odd">
+			<th class="head">Parameters</th>
+			<th class="head">Comment</th>
+		</tr>
+	</thead>
+	<tbody valign="top">
+		<tr class="row-even">
+			<td>1. user_id</td>
+			<td>Golomt bank will provide you</td>
+		</tr>
+		<tr class="row-odd">
+			<td>2. password</td>
+			<td>Golomt bank will provide you</td>
+		</tr>
+		<tr class="row-even">
+			<td>3. trans_number</td>
+			<td>Transaction number that is you send in Second step</td>
+		</tr>
+		<tr class="row-even">
+			<td>4. ognoo</td>
+			<td>Transaction date in below format </br>/YYYYMMDD - >  20120130/</td>
+		</tr>
+		<tr class="row-even">
+			<td>5. amount</td>
+			<td>Transaction amoun in below format 2500 or 2500.35 /you need to use . if you send fraction number/
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>After you send SOAP request to our SOAP service:</p>
+
+<table border="1" class="docutils">
+	<colgroup>
+	<col width="17%">
+	<col width="60%">
+	</colgroup>
+	<thead valign="bottom">
+		<tr class="row-odd">
+			<th class="head">Bank will response</th>
+			<th class="head">Comment</th>
+		</tr>
+	</thead>
+	<tbody valign="top">
+		<tr class="row-even">
+			<td>6 char</td>
+			<td>If transaction is success. 6 char will send you. You need to count the length of the character</td>
+		</tr>
+		<tr class="row-odd">
+			<td>2</td>
+			<td>Customer card information is wrong or not enough
+                                                               fund 
+</td>
+		</tr>
+		<tr class="row-even">
+			<td>3</td>
+			<td>You need to check your SOAP user_id or password.</td>
+		</tr>
+		<tr class="row-even">
+			<td>4</td>
+			<td>SOAP request is wrong format or not correct amount or another parameters. <br>Example: date, amount, trans_number</td>
+		</tr>
+		<tr class="row-even">
+			<td>0</td>
+			<td>Not registered transaction. This means this transaction is never made in online system.</td>
+		</tr>
+	</tbody>
+</table>
+
+<p>SOAP request example in PHP:</p>
+
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">&lt;?php</span> <span class="k">echo</span> "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"<span class="cp">?&gt;</span>\n" <span class="cp">?&gt;</span>
+<span class="cp">&lt;?php</span>
+$client = <span class="k">new</span> SoapClient<span class="p">(</span><span class="s">"https://m.egolomt.mn:7073/persistence.asmx?WSDL"</span><span class="p">);</span> 
+<span class="k">echo</span> <span class="p">(</span>$client-&gt;Get_new<span class="p">(</span> <span class="k">array</span> <span class="p">(</span>
+	'v0' <span class="k">=&gt;</span> <span class="s">"user_id"</span><span class="p">,</span>
+	'v1' <span class="k">=&gt;</span> <span class="s">"password"</span><span class="p">,</span>
+	'v2' <span class="k">=&gt;</span> <span class="s">"trans_number"</span><span class="p">,</span>
+	'v3' <span class="k">=&gt;</span> <span class="s">"ognoo"</span><span class="p">,</span>
+	'v4' <span class="k">=&gt;</span> <span class="s">"trans_amount"</span>
+<span class="p">)</span><span class="p">)</span>-&gt;Get_newResult<span class="p">);</span> 
+<span class="cp">?&gt;</span>
+</pre></div></td></tr></tbody></table></div></div>
+
+<p>Comment: Your webhosting 7073 port must be opened /inbound and outbound/.</p>
+<p>Using SOAP example code in PHP:</p>
+
+<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">&lt;?php</span>
+<span class="c1">// using GET method to receive information
+</span>$success = $_GET[<span class="s">'success'</span>];
+<span class="c1">// using GET method to receive information
+</span>$trans_number = $_GET[<span class="s">'trans_number'</span>];
+<span class="c1">// Golomt bank will provide you this number. Same as v0 in SOAP request example
+</span>$Usernamesoap = <span class="s">""</span>;
+<span class="c1">// Golomt bank will provide you this password. Same as v1 in  SOAP request example
+</span>$Passwordsoap = <span class="s">""</span>;
+<span class="c1">// Transaction date
+</span>$trans_date = <span class="s">""</span>;  
+<span class="c1">// Transaction amount
+</span>$trans_amount = <span class="s">""</span>;
+<span class="c1">// Bank will provide you this folder code
+</span>require_once<span class="p">(</span><span class="s">'nusoap/nusoap.php'</span><span class="p">);</span> 
+$wsdl = <span class="s">"http://www.egolomt.mn:7070/persistence.asmx?WSDL"</span>;
+$client = <span class="k">new</span> nusoap_client<span class="p">(</span>$wsdl<span class="p">,</span> <span class="s">'wsdl'</span><span class="p">);</span> 
+$client_err = $client-&gt;getError<span class="p">();</span> 
+<span class="k">if</span> <span class="p">(</span>$client_err<span class="p">)</span> <span class="p">{</span>
+	<span class="k">echo</span> <span class="s">'&lt;h2&gt;Error&lt;/h2&gt;&lt;pre&gt;'</span> . htmlspecialchars<span class="p">(</span>$client-&gt;getDebug<span class="p">(</span><span class="p">)</span><span class="p">,</span> ENT_QUOTES<span class="p">)</span> . <span class="s">'&lt;/pre&gt;'</span>;
+	exit<span class="p">();</span> 
+<span class="p">}</span>
+$client-&gt;soap_defencoding = <span class="s">'UTF-8'</span>; 
+$params = <span class="k">array</span> <span class="p">(</span>
+	<span class="s">'v0'</span> <span class="k">=&gt;</span> $Usernamesoap<span class="p">,</span> 
+	<span class="s">'v1'</span> <span class="k">=&gt;</span> $Passwordsoap<span class="p">,</span> 
+	<span class="s">'v2'</span> <span class="k">=&gt;</span> $trans_number<span class="p">,</span> 
+	<span class="s">'v3'</span> <span class="k">=&gt;</span> $trans_date<span class="p">,</span> 
+	<span class="s">'v4'</span> <span class="k">=&gt;</span> $trans_amount
+<span class="p">);</span> 
+$result = $client-&gt;call<span class="p">(</span><span class="s">'Get_new'</span><span class="p">,</span> $params<span class="p">,</span><span class="s"><span class="s">''</span></span><span class="p">,</span> <span class="s"><span class="s">''</span></span><span class="p">,</span> false<span class="p">,</span> true <span class="p">);</span> 
+<span class="k">if</span> <span class="p">(</span>$client-&gt;fault<span class="p">)</span> <span class="p">{</span>
+	<span class="k">echo</span> <span class="s">'&lt;h2&gt;Error&lt;/h2&gt;&lt;pre&gt;'</span>; 
+	print_r<span class="p">(</span>$result <span class="p">);</span> 
+	<span class="k">echo</span> <span class="s">'&lt;/pre&gt;'</span>; 
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+	$client_err = $client-&gt;getError<span class="p">();</span> 
+	<span class="k">if</span> <span class="p">(</span>$client_err<span class="p">)</span> <span class="p">{</span>
+		<span class="k">echo</span> <span class="s">'&lt;h2&gt;Error&lt;/h2&gt;&lt;pre&gt;'</span> . $client_err . <span class="s">'&lt;/pre&gt;'</span>; 
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		$responseCode = $result[Get_newResult];
+	<span class="p">}</span>
+<span class="p">}</span>
+<span class="k">if</span> <span class="p">(</span>strlen<span class="p">(</span>$responseCode<span class="p">)</span> == 6<span class="p">)</span>
+<span class="p">{</span>
+	if<span class="p">(</span>$success == 0<span class="p">)</span> <span class="p">{</span>
+<span class="c1">		//After double checked the transaction. Your transaction is completely success done.
+</span>		<span class="k">echo</span> <span class="s">"SUCCESSFULLY COMPLETED"</span>;
+	<span class="p">}</span>
+<span class="p">}</span>
+<span class="k">else</span> 
+<span class="p">{</span>
+	<span class="k">echo</span> <span class="s">"Not successful transaction"</span>;
+<span class="p">}</span>
+<span class="cp">?&gt;</span>
+</pre></div></td></tr></tbody></table></div></div>
+
+
+<script src="sf_highlight.js"></script>
+</body>
+</html>
