@@ -359,12 +359,56 @@
 				var obj = getFromBetween.get(lines[i],'"','"');
 				
 				for(j in obj) {
+					var fi = str.indexOf(obj[j].replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\?/g,'?').replace(/\$/g,'$').replace('(','(').replace(')',')'));
+					var li = fi + obj[j].length;
+					var match = str.match(/(\.*)/g);
+					var newstr = "";
+					var morecount = 0;
+					for(s in match){
+						if((parseInt(s) + morecount) < str.length) {
+							if(match[s] != "") {
+								if(fi <= s && li >= s){
+									morecount += match[s].length - 1;
+									newstr += match[s];
+								}
+								else {
+									morecount += match[s].length - 1;
+									newstr +='<span class="o">'+ match[s] + '</span>';
+								}
+							} else {
+								newstr +=str[parseInt(s) + morecount];
+							}
+						}
+					}
+					str = newstr;
 					regex = new RegExp('"'+ obj[j].replace(/</g,'\\&lt;').replace(/>/g,'\\&gt;').replace(/\?/g,'\\?').replace(/\$/g,'\\$').replace('(','\\(').replace(')','\\)')+'"', "g");
 					str = str.replace(regex, '<span class="s">"' + obj[j] + '"</span>');
 				}
 				
 				var obj = getFromBetween.get(lines[i], "'","'");
 				for(j in obj){
+					var fi = str.indexOf(obj[j].replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\?/g,'?').replace(/\$/g,'$').replace('(','(').replace(')',')'));
+					var li = fi + obj[j].length;
+					var match = str.match(/(\.*)/g);
+					var newstr = "";
+					var morecount = 0;
+					for(s in match){
+						if((parseInt(s) + morecount) < str.length) {
+							if(match[s] != "") {
+								if(fi <= s && li >= s){
+									morecount += match[s].length - 1;
+									newstr += match[s];
+								}
+								else {
+									morecount += match[s].length - 1;
+									newstr +='<span class="o">'+ match[s] + '</span>';
+								}
+							} else {
+								newstr +=str[parseInt(s) + morecount];
+							}
+						}
+					}
+					str = newstr;
 					regex = new RegExp("'"+ obj[j].replace(/</g,'\\&lt;').replace(/>/g,'\\&gt;').replace(/\?/g,'\\?').replace(/\$/g,'\\$').replace('(','\\(').replace(')','\\)')+"'", "g");
 					
 					str = str.replace(regex, '<span class="s">\'' + obj[j].replace(/</g,'\&lt;').replace(/>/g,'\&gt;') + '\'</span>');
