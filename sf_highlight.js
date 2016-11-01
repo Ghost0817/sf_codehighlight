@@ -1,6 +1,6 @@
 (function() {
 	
-	var phpcodestr = [ 'namespace','use','public','class','function','foreach', 'echo', 'endforeach', 'as', 'array', '=\&gt;', 'new', 'if', 'else', 'print_r','return' ]
+	var phpcodestr = [ 'namespace','use','public','class','function','foreach', 'echo', 'endforeach', 'as', 'array', 'new', 'if', 'else', 'print_r','return' ]
 	var is_tag_open = false;
 
 	var getFromBetween = {
@@ -60,6 +60,15 @@
 		for(k in phpcodestr) {
 			regex = new RegExp( phpcodestr[k]+' ', "g");
 			code = code.replace(regex, '<span class="k">'+ phpcodestr[k] +'</span> ');
+		}
+		for(k in phpcodestr) {
+			regex = new RegExp( ' '+ phpcodestr[k]+'\\(', "g");
+			code = code.replace(regex, ' <span class="k">'+ phpcodestr[k] +'</span>(');
+		}
+		
+		for(k in phpcodestr) {
+			regex = new RegExp( phpcodestr[k]+'\\(', "g");
+			code = code.replace(regex, '<span class="k">'+ phpcodestr[k] +'</span>(');
 		}
 		for(k in phpcodestr) {
 			if(phpcodestr[k] == code) {
@@ -125,7 +134,7 @@
 
 	var lines = textArea.value.split("\n"); // arrayOfLines is array where every element is string of one line
 	
-	
+	function sfhighlight() {
 
 	var codehighlight = document.createElement('div');
 	codehighlight.className = 'literal-block notranslate';
@@ -361,7 +370,7 @@
 				for(j in obj) {
 					var fi = str.indexOf(obj[j].replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\?/g,'?').replace(/\$/g,'$').replace('(','(').replace(')',')'));
 					var li = fi + obj[j].length;
-					var match = str.match(/(\.*)/g);
+					var match = str.match(/(\.*|:*)/g);
 					var newstr = "";
 					var morecount = 0;
 					for(s in match){
@@ -386,31 +395,45 @@
 				}
 				
 				var obj = getFromBetween.get(lines[i], "'","'");
-				for(j in obj){
-					var fi = str.indexOf(obj[j].replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\?/g,'?').replace(/\$/g,'$').replace('(','(').replace(')',')'));
-					var li = fi + obj[j].length;
-					var match = str.match(/(\.*)/g);
-					var newstr = "";
-					var morecount = 0;
-					for(s in match){
-						if((parseInt(s) + morecount) < str.length) {
-							if(match[s] != "") {
+				var match = str.match(/(\.|:|=\&gt;|-\&gt;)*/g);
+				var newstr = "";
+				var morecount = 0;
+				for(s in match){
+					var is_string = false;
+					if((parseInt(s) + morecount) < str.length) {
+						if(match[s] != "") {
+							for(j in obj){
+								
+								var fi = str.indexOf(obj[j].replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\?/g,'?').replace(/\$/g,'$').replace('(','(').replace(')',')'));
+								var li = fi + obj[j].length;
+								if(fi > s || li < s) {
+									continue;
+								}
 								if(fi <= s && li >= s){
-									morecount += match[s].length - 1;
-									newstr += match[s];
+									is_string = true;
+								} else {
+									//something to do ....
 								}
-								else {
-									morecount += match[s].length - 1;
-									newstr +='<span class="o">'+ match[s] + '</span>';
-								}
-							} else {
-								newstr +=str[parseInt(s) + morecount];
 							}
+							if(is_string){
+								morecount += match[s].length - 1;
+								newstr += match[s];
+							}
+							else {
+								morecount += match[s].length - 1;
+								newstr +='<span class="o">'+ match[s] + '</span>';
+							}
+						} else {
+							newstr +=str[parseInt(s) + morecount];
 						}
 					}
-					str = newstr;
-					regex = new RegExp("'"+ obj[j].replace(/</g,'\\&lt;').replace(/>/g,'\\&gt;').replace(/\?/g,'\\?').replace(/\$/g,'\\$').replace('(','\\(').replace(')','\\)')+"'", "g");
+				}
+				str = newstr;
 					
+				for(j in obj){
+					var rex = /(<([^>]+)>)/ig;
+					str = str.replace( Phpcode(obj[j]), Phpcode(obj[j]).replace(rex , ""))
+					regex = new RegExp("'"+ obj[j].replace(/</g,'\\&lt;').replace(/>/g,'\\&gt;').replace(/\?/g,'\\?').replace(/\$/g,'\\$').replace('(','\\(').replace(')','\\)')+"'", "g");
 					str = str.replace(regex, '<span class="s">\'' + obj[j].replace(/</g,'\&lt;').replace(/>/g,'\&gt;') + '\'</span>');
 				}
 				
@@ -489,5 +512,6 @@
 
 
 	coderesult.appendChild(codehighlight);
+	}
 
 }());
