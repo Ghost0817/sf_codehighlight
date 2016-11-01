@@ -1,5 +1,13 @@
-(function() {
-	
+var _self = (typeof window !== 'undefined')
+	? window   // if in browser
+	: (
+		(typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScope)
+		? self // if in worker
+		: {}   // if in node js
+	);
+
+var sfhighlight = function sfhighlight() {
+		
 	var phpcodestr = [ 'namespace','use','public','class','function','foreach', 'echo', 'endforeach', 'as', 'array', 'new', 'if', 'else', 'print_r','return' ]
 	var is_tag_open = false;
 
@@ -122,19 +130,13 @@
 		return code;
 	}
 
-	if (typeof self === 'undefined' || !self.document) {
-
-		console.log('ajillax bolomjgui bn!!!');
-		return;
-	}
-
 	var codeType = document.getElementById("codeType");
 	var textArea = document.getElementById("RawCodeInput");
 	var coderesult = document.getElementById("code-result");
+	
+	coderesult.innerHTML = ""; // clear old code design
 
 	var lines = textArea.value.split("\n"); // arrayOfLines is array where every element is string of one line
-	
-	function sfhighlight() {
 
 	var codehighlight = document.createElement('div');
 	codehighlight.className = 'literal-block notranslate';
@@ -512,6 +514,5 @@
 
 
 	coderesult.appendChild(codehighlight);
-	}
 
-}());
+};
