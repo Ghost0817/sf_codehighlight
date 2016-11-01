@@ -53,7 +53,7 @@ $collection->add('blog_show new public function ', new Route('/blog/{slug}', arr
 
 return $collection;</textarea>
 
-<button class="" onclick="this.sfhighlight();">Code Generator</button>
+<button class="" onclick="sfhighlight();">Code Generator</button>
 
 <div id="code-result"></div>
 
@@ -189,37 +189,6 @@ return $collection;</textarea>
 </td></tr></tbody></table></div></div>
 
 
-<div class="literal-block notranslate"><div class="highlight-php"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre> 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-10
-11
-12
-13
-14
-</pre></div></td><td class="code"><div class="highlight"><pre><span class="cp">&lt;?php</span>
-<span class="c1">// app/config/routing.php
-</span><span class="k">use</span> Symfony\Component\Routing\RouteCollection;
-<span class="k">use</span> Symfony\Component\Routing\Route;
-
-$collection = <span class="k">new</span> RouteCollection<span class="p">();</span> 
-$collection-&gt;add<span class="p">(</span><span class="s">'blog_list'</span><span class="p">,</span> <span class="k">new</span> Route<span class="p">(</span><span class="s">'/blog'</span><span class="p">,</span> array<span class="p">(</span>
-    <span class="s">'_controller'</span> <span class="o">=&gt;</span> <span class="s">'AppBundle:Blog:list'</span><span class="p">,</span>
-<span class="p">)</span><span class="p">)</span><span class="p">);</span> 
-$collection-&gt;add<span class="p">(</span><span class="s">'blog_show new public function '</span><span class="p">,</span> <span class="k">new</span> Route<span class="p">(</span><span class="s">'/blog/{slug}'</span><span class="p">,</span> array<span class="p">(</span>
-    <span class="s">'_controller'</span> <span class="o">=&gt;</span> <span class="s">'AppBundle:Blog:show'</span><span class="p">,</span>
-<span class="p">)</span><span class="p">)</span><span class="p">);</span> 
-
-<span class="k">return</span> $collection;
-</pre></div></td></tr></tbody></table></div></div>
-
-
 
 <div class="literal-block notranslate"><div class="highlight-html+jinja"><table class="highlighttable"><tbody><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
@@ -251,6 +220,12 @@ Thanks!
 <script src="sf_highlight.js"></script>
 
 <script>
+
+var testFunc = function (e){ console.log('hello'+e); };
+
+testFunc();
+
+
   function copyToClipboard(text) {
   var textArea = document.createElement("textarea");
 
