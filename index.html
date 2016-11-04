@@ -29,7 +29,7 @@ textarea
 <!-- Bush complete -->
 
 <select id="codeType" name="codeType">
-	<option value="bush">Bush</option>
+	<option value="bash">Bush</option>
 	<option value="php" selected>Php</option>
 	<option value="xml">Xml</option>
 	<option value="yml">Yml</option>
@@ -39,19 +39,8 @@ textarea
 
 <textarea id="RawCodeInput" rows="12">
 <?php
-// app/config/routing.php
-use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\Route;
-
-$collection = new RouteCollection();
-$collection->add('blog_list', new Route('/blog', array(
-    '_controller' => 'AppBundle:Blog:list',
-)));
 $collection->add('blog_show new public function ', new Route('/blog/{slug}', array(
-    '_controller' => 'AppBundle:Blog:show',
-)));
-
-return $collection;</textarea>
+</textarea>
 
 <button class="" onclick="sfhighlight();">Code Generator</button>
 
