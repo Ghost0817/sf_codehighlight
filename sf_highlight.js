@@ -142,9 +142,7 @@ var sfhighlight = function sfhighlight() {
 	codehighlight.className = 'literal-block notranslate';
 
 	var codehighlighttype = document.createElement('div');
-	//codehighlighttype.className = 'highlight-bash';
-	codehighlighttype.className = 'highlight-php';
-	//codehighlighttype.className = 'highlight-twig';
+	codehighlighttype.className = 'highlight-'+codeType.value;
 
 	codehighlight.appendChild(codehighlighttype);
 
@@ -190,7 +188,7 @@ var sfhighlight = function sfhighlight() {
 	for(var i = 0;i < lines.length;i++){
 		//code here using lines[i] which will give you each line
 
-		if(codeType.value == 'bush'){
+		if(codeType.value == 'bash'){
 			if(lines[i].startsWith('#'))
 			{
 				var span = document.createElement('span');
@@ -201,7 +199,15 @@ var sfhighlight = function sfhighlight() {
 
 			if(lines[i].startsWith('$ '))
 			{
-				pre.innerHTML += lines[i].replace('$ ','<span class="nv" style="-webkit-user-select: none;">$ </span>')+'\n';
+				var obj = getFromBetween.get(lines[i],'"','"');
+				var str = lines[i];
+				
+
+				for(j in obj){
+					var regex = new RegExp('"'+ obj[j].replace('(','\\(').replace(')','\\)')+'"', "g");
+					str = str.replace(regex, '<span class="s2">"' + obj[j] + '"</span>');
+				}
+				pre.innerHTML += str.replace('$ ','<span class="nv" style="-webkit-user-select: none;">$ </span>')+'\n';
 			}
 
 			if(!lines[i].startsWith('$ ') && !lines[i].startsWith('#'))
@@ -408,15 +414,18 @@ var sfhighlight = function sfhighlight() {
 								
 								var fi = str.indexOf(obj[j].replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\?/g,'?').replace(/\$/g,'$').replace('(','(').replace(')',')'));
 								var li = fi + obj[j].length;
+								console.log(fi > s || li < s);
 								if(fi > s || li < s) {
 									continue;
 								}
+								console.log(fi <= s && li >= s);
 								if(fi <= s && li >= s){
 									is_string = true;
 								} else {
 									//something to do ....
 								}
 							}
+							console.log(match[s]);
 							if(is_string){
 								morecount += match[s].length - 1;
 								newstr += match[s];
